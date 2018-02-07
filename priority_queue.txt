@@ -1,0 +1,20 @@
+
+
+priority_queue < Pair < int , int > > pq;
+
+class pair{
+public:
+
+	int u , v ;
+	bool operator<(const pair & b)const {
+		return ( this->u >  b.u ) ;
+	}
+}
+
+int main()
+{
+priority_queue < pair > pq;
+pq.push({1,2}) ;
+
+
+	
