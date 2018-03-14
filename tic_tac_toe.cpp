@@ -1,3 +1,7 @@
+//pruning idea goes to Arpon and Mishuk
+//14-03-2018
+
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -17,13 +21,14 @@ struct game
 };
 
 game choice;
+int d;
 
-int score(game g)
+int score(game g, int depth)
 {
 	if(g.win == XP)
-		return 10;
+		return 10 - depth;
 	else if(g.win == OP)
-		return -10;
+		return depth - 10;
 	else
 		return 0;
 
@@ -166,18 +171,47 @@ game get_new_state(int turn, string st)
 	return ng;
 }
 
-int min_max(game g)
+int min_max(game g, int depth, int al, int bt)
 {
+	
 	if(terminal(g))
-		return score(g);
+	{
+		cout << depth << endl;
+		return score(g, depth);
+	}
+	depth += 1;
 
 	vector<int> scores;
 	vector<string> moves = get_available_moves(g);
 	for(int i = 0; i < moves.size(); i++)
 	{
 		game possible_game = get_new_state(g.active_turn,moves[i]);
+		int v = min_max(possible_game, depth, g.alpha, g.beta);
 
-		scores.push_back(min_max(possible_game));
+		scores.push_back(v);
+
+		if(g.active_turn == 1)
+		{
+			if(g.alpha < v)
+			{
+				g.alpha = v;
+			}
+
+			if(g.alpha > bt)
+				break;
+		}
+
+		if(g.active_turn == 0)
+		{
+			if(g.beta > v)
+			{
+				g.beta = v;
+			}
+			if(g.beta < al)
+				break;
+		}
+
+
 	}
 
 	//max_score_calculation
@@ -196,10 +230,9 @@ int min_max(game g)
 		int min_score_index = distance(scores.begin(), min_element(scores.begin(), scores.end() ));
 		game gc;
 		gc.board = moves[min_score_index];
-		gc.active_turn = 0; 
+		gc.active_turn = 1; 
 		choice = gc;
-		
-
+		//cout << "min score" << min_score_index << endl;
 		return scores[min_score_index];
 	}
 
@@ -211,8 +244,10 @@ int main()
 {
 
 	game t;
+	cout << "Enter board " << endl;
 	cin >>t.board ;
-	t.active_turn = XP;
+	cout << "Enter 1 for X and 0 for O" << endl;
+	cin >> t.active_turn ;
 	//terminal test
 	// cout << terminal(t) << endl;
 	// cout << t.win << endl;
@@ -226,8 +261,8 @@ int main()
 
 
 	// }
-	min_max(t);
-	cout << choice.board << endl;
+	min_max(t,0,-INF, INF);
+	cout << choice.board << "depth" << d << endl;
 
 	return 0;
 }
