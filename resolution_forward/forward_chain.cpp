@@ -8,7 +8,7 @@ struct clause
 {
 	vector<string> premise;
 	string conclusion;
-	int num_of_premise;	
+	int num_of_premise;
 };
 
 set<string> infer;
@@ -28,7 +28,7 @@ void read()
 	for(int i = 0; i < num_horn; i++)
 	{
 		clause Cl;
-		
+
 		cout << "Enter num of premises for clause :" << i+1 << endl;
 		cin >> Cl.num_of_premise;
 		for(int j = 0; j < Cl.num_of_premise; j++)
@@ -98,6 +98,7 @@ bool forward_chain()
 			{
 				if( find(clauses[i].premise.begin(), clauses[i].premise.end(),p)!= clauses[i].premise.end() )
 					clauses[i].num_of_premise -= 1;
+
 				if(clauses[i].num_of_premise == 0)
 					agenda.push(clauses[i].conclusion);
 
